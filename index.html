@@ -3,23 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>音频播放</title>
+    <title>音频列表</title>
     <style>
         body {
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+        #音频列表容器 {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            transition: background 0.2s;
+        }
+        li:last-child {
+            border-bottom: none;
+        }
+        li:hover {
+            background: #f5f5f5;
+        }
+        a {
+            color: #3498db;
+            text-decoration: none;
+            display: block;
+        }
+        a:hover {
+            color: #2980b9;
+        }
+        #音频播放器 {
+            width: 100%;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-top: 20px;
+        }
+        .无文件提示 {
+            color: #7f8c8d;
+            text-align: center;
+            padding: 20px;
+        }
+        /* 响应式 */
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+            #音频列表容器 {
+                padding: 15px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- 音频元素 -->
-    <audio id="audioPlayer" controls>
-        <!-- 指定音频文件的路径和类型 -->
-        <source src="我的...身份？.wav" type="audio/mpeg">
-        <!-- 备用文本，如果浏览器不支持音频元素 -->
-        您的浏览器不支持音频播放元素。
-    </audio>
+    <h1>音频列表</h1>
+    <div id="音频列表容器">
+        <!-- 列表将通过JavaScript动态生成 -->
+    </div>
+    <audio id="音频播放器" controls></audio>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取页面元素
+            const 音频列表容器 = document.getElementById('音频列表容器');
+            const 音频播放器 = document.getElementById('音频播放器');
+            
+            // 音频文件列表（修改为实际的音频文件），由于没有后端所以只能手动添加音乐列表了
+            const 音频文件列表 = [
+                "1.mp3",
+                "2.wav",
+                "3.ogg"
+            ];
+            
+            // 创建文件列表HTML
+            function 创建列表() {
+                if (音频文件列表.length === 0) {
+                    音频列表容器.innerHTML = '<p class="无文件提示">暂无音频文件</p>';
+                    return;
+                }
+                
+                const 列表元素 = document.createElement('ul');
+                
+                音频文件列表.forEach(文件名 => {
+                    const 列表项 = document.createElement('li');
+                    const 播放链接 = document.createElement('a');
+                    
+                    播放链接.href = "#";
+                    播放链接.textContent = 文件名;
+                    播放链接.onclick = function(e) {
+                        e.preventDefault();
+                        音频播放器.src = 文件名;
+                        音频播放器.play();
+                        
+                        // 添加当前播放样式
+                        document.querySelectorAll('#音频列表容器 li').forEach(item => {
+                            item.style.background = 'transparent';
+                        });
+                        列表项.style.background = '#f0f7ff';
+                    };
+                    
+                    列表项.appendChild(播放链接);
+                    列表元素.appendChild(列表项);
+                });
+                
+                音频列表容器.appendChild(列表元素);
+            }
+            
+            // 初始化列表
+            创建列表();
+            
+            // 播放器事件监听
+            音频播放器.addEventListener('play', function() {
+                console.log('正在播放: ' + 音频播放器.src);
+            });
+        });
+    </script>
 </body>
 </html>
